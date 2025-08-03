@@ -32,19 +32,19 @@ class _SplashScreenState extends State<SplashScreen>
     
     // Logo animations
     _logoController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
     
     // Text animations
     _textController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 2500),
       vsync: this,
     );
     
     // Runner animation
     _runnerController = AnimationController(
-      duration: const Duration(milliseconds: 3000),
+      duration: const Duration(milliseconds: 4000),
       vsync: this,
     );
 
@@ -82,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen>
       curve: const Interval(0.3, 0.8, curve: Curves.easeOut),
     ));
 
-    // Runner animations
+    // Runner animations - slowed down
     _runnerPosition = Tween<double>(
       begin: -1.0,
       end: 1.0,
@@ -108,15 +108,15 @@ class _SplashScreenState extends State<SplashScreen>
     _logoController.forward();
     
     // Start text animation after a delay
-    await Future.delayed(const Duration(milliseconds: 300));
+    await Future.delayed(const Duration(milliseconds: 400));
     _textController.forward();
     
     // Start runner animation after logo is mostly done
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future.delayed(const Duration(milliseconds: 1000));
     _runnerController.forward();
     
     // Wait for all animations to complete, then navigate
-    await Future.delayed(const Duration(milliseconds: 2000));
+    await Future.delayed(const Duration(milliseconds: 3000));
     
     if (mounted) {
       Navigator.of(context).pushReplacement(
@@ -176,11 +176,11 @@ class _SplashScreenState extends State<SplashScreen>
                       child: Opacity(
                         opacity: _logoOpacity.value,
                         child: Container(
-                          width: 120,
-                          height: 120,
+                          width: 140,
+                          height: 140,
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(35),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.1),
@@ -189,10 +189,20 @@ class _SplashScreenState extends State<SplashScreen>
                               ),
                             ],
                           ),
-                          child: const Icon(
-                            Icons.directions_run,
-                            color: Color(0xFF5ABDA7),
-                            size: 60,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: AnimatedBuilder(
+                              animation: _logoController,
+                              builder: (context, child) {
+                                return Transform.scale(
+                                  scale: 1.0 + (0.1 * _logoController.value),
+                                  child: Image.asset(
+                                    'assets/images/logo-self.png',
+                                    fit: BoxFit.contain,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
