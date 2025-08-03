@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'services/auth_service.dart';
 import 'services/firestore_service.dart';
+import 'views/splash/splash_screen.dart';
 import 'views/landing/landing_screen.dart';
 import 'views/auth/login_screen.dart';
 import 'views/auth/role_selection_screen.dart';
@@ -107,7 +108,9 @@ class NowRunnerApp extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        home: const AuthWrapper(),
+        home: const SplashScreen(
+          child: AuthWrapper(),
+        ),
       ),
     );
   }
