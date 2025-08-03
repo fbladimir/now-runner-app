@@ -185,56 +185,35 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           padding: const EdgeInsets.all(24.0),
           child: Column(
             children: [
-              // Logo and Title
+              // Logo and Branding
               const SizedBox(height: 40),
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF5ABDA7),
-                  borderRadius: BorderRadius.circular(20),
+              Center(
+                child: Image.asset(
+                  'assets/images/logo-self.png',
+                  height: 120,
+                  width: 120,
+                  fit: BoxFit.contain,
                 ),
-                child: const Icon(
-                  Icons.directions_run,
-                  color: Colors.white,
-                  size: 40,
-                ),
-              ),
-              const SizedBox(height: 24),
-              Text(
-                'NowRunner',
-                style: GoogleFonts.inter(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1A1A1A),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Connect with runners and requesters',
-                style: GoogleFonts.inter(
-                  fontSize: 16,
-                  color: const Color(0xFF1A1A1A).withOpacity(0.7),
-                ),
-                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 40),
 
               // Tabs
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFFE0E0E0)),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: TabBar(
                   controller: _tabController,
-                  indicator: BoxDecoration(
-                    color: const Color(0xFF5ABDA7),
-                    borderRadius: BorderRadius.circular(8),
+                  indicator: UnderlineTabIndicator(
+                    borderSide: BorderSide(
+                      color: const Color(0xFF1A1A1A),
+                      width: 2,
+                    ),
+                    insets: const EdgeInsets.symmetric(horizontal: 0),
                   ),
-                  labelColor: Colors.white,
-                  unselectedLabelColor: const Color(0xFF1A1A1A),
+                  labelColor: const Color(0xFF1A1A1A),
+                  unselectedLabelColor: const Color(0xFF1A1A1A).withOpacity(0.5),
                   labelStyle: GoogleFonts.inter(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
@@ -244,8 +223,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     fontSize: 16,
                   ),
                   tabs: const [
-                    Tab(text: 'Sign In'),
-                    Tab(text: 'Sign Up'),
+                    Tab(text: 'Sign in'),
+                    Tab(text: 'Sign up'),
                   ],
                 ),
               ),
@@ -257,9 +236,15 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   controller: _tabController,
                   children: [
                     // Sign In Tab
-                    _buildSignInTab(),
+                    Container(
+                      width: double.infinity,
+                      child: _buildSignInTab(),
+                    ),
                     // Sign Up Tab
-                    _buildSignUpTab(),
+                    Container(
+                      width: double.infinity,
+                      child: _buildSignUpTab(),
+                    ),
                   ],
                 ),
               ),
@@ -271,33 +256,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   Widget _buildSignInTab() {
-    return SingleChildScrollView(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Social Login Buttons
-          _buildSocialLoginButtons(),
-          const SizedBox(height: 24),
-          
-          // Divider
-          Row(
-            children: [
-              Expanded(child: Divider(color: const Color(0xFF1A1A1A).withOpacity(0.2))),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  'or continue with email',
-                  style: GoogleFonts.inter(
-                    color: const Color(0xFF1A1A1A).withOpacity(0.6),
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              Expanded(child: Divider(color: const Color(0xFF1A1A1A).withOpacity(0.2))),
-            ],
-          ),
-          const SizedBox(height: 24),
-
           // Email Login Form
           Form(
             key: _loginFormKey,
@@ -306,9 +269,23 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 TextFormField(
                   controller: _loginEmailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email_outlined),
+                  decoration: InputDecoration(
+                    labelText: 'Email address',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFF5ABDA7), width: 2),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -326,10 +303,25 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   obscureText: _obscureLoginPassword,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    prefixIcon: const Icon(Icons.lock_outlined),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFF5ABDA7), width: 2),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureLoginPassword ? Icons.visibility : Icons.visibility_off,
+                        color: const Color(0xFF1A1A1A).withOpacity(0.5),
                       ),
                       onPressed: () {
                         setState(() {
@@ -348,35 +340,73 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     return null;
                   },
                 ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _signIn,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : const Text('Sign In'),
-                ),
                 const SizedBox(height: 16),
-                TextButton(
-                  onPressed: () {
-                    // TODO: Implement forgot password
-                  },
-                  child: Text(
-                    'Forgot Password?',
-                    style: GoogleFonts.inter(
-                      color: const Color(0xFF5ABDA7),
-                      fontWeight: FontWeight.w500,
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      // TODO: Implement forgot password
+                    },
+                    child: Text(
+                      'Forgot password?',
+                      style: GoogleFonts.inter(
+                        color: const Color(0xFF1A1A1A),
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _signIn,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF5ABDA7),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : Text(
+                            'Sign in',
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
                 ),
               ],
             ),
+          ),
+          
+          const SizedBox(height: 32),
+          
+          // Social Login Buttons
+          _buildSocialLoginButtons(),
+          
+          const Spacer(),
+          
+          // Legal Text
+          Text(
+            'By signing in, you agree to our Terms of Service and Privacy Policy.',
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              color: const Color(0xFF1A1A1A).withOpacity(0.6),
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -384,33 +414,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   Widget _buildSignUpTab() {
-    return SingleChildScrollView(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Social Login Buttons
-          _buildSocialLoginButtons(),
-          const SizedBox(height: 24),
-          
-          // Divider
-          Row(
-            children: [
-              Expanded(child: Divider(color: const Color(0xFF1A1A1A).withOpacity(0.2))),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  'or continue with email',
-                  style: GoogleFonts.inter(
-                    color: const Color(0xFF1A1A1A).withOpacity(0.6),
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-              Expanded(child: Divider(color: const Color(0xFF1A1A1A).withOpacity(0.2))),
-            ],
-          ),
-          const SizedBox(height: 24),
-
           // Sign Up Form
           Form(
             key: _signupFormKey,
@@ -418,9 +426,23 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               children: [
                 TextFormField(
                   controller: _signupNameController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Full Name',
-                    prefixIcon: Icon(Icons.person_outlined),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFF5ABDA7), width: 2),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -433,9 +455,23 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 TextFormField(
                   controller: _signupEmailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.email_outlined),
+                  decoration: InputDecoration(
+                    labelText: 'Email address',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFF5ABDA7), width: 2),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -453,10 +489,25 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   obscureText: _obscureSignupPassword,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    prefixIcon: const Icon(Icons.lock_outlined),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFF5ABDA7), width: 2),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureSignupPassword ? Icons.visibility : Icons.visibility_off,
+                        color: const Color(0xFF1A1A1A).withOpacity(0.5),
                       ),
                       onPressed: () {
                         setState(() {
@@ -476,21 +527,56 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   },
                 ),
                 const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _signUp,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _signUp,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF5ABDA7),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : Text(
+                            'Sign up',
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        )
-                      : const Text('Sign Up'),
+                  ),
                 ),
               ],
             ),
+          ),
+          
+          const SizedBox(height: 32),
+          
+          // Social Login Buttons
+          _buildSocialLoginButtons(),
+          
+          const Spacer(),
+          
+          // Legal Text
+          Text(
+            'By signing up, you agree to our Terms of Service and Privacy Policy.',
+            style: GoogleFonts.inter(
+              fontSize: 12,
+              color: const Color(0xFF1A1A1A).withOpacity(0.6),
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
@@ -501,53 +587,61 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     return Column(
       children: [
         // Google Sign In
-        OutlinedButton.icon(
-          onPressed: () {
-            // TODO: Implement Google Sign In
-          },
-          icon: Image.asset(
-            'assets/icons/google.png',
-            height: 20,
-            width: 20,
-            errorBuilder: (context, error, stackTrace) => const Icon(Icons.g_mobiledata),
-          ),
-          label: Text(
-            'Continue with Google',
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF1A1A1A),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: () {
+              // TODO: Implement Google Sign In
+            },
+            icon: Image.asset(
+              'assets/icons/google.png',
+              height: 20,
+              width: 20,
+              errorBuilder: (context, error, stackTrace) => const Icon(Icons.g_mobiledata),
             ),
-          ),
-          style: OutlinedButton.styleFrom(
-            backgroundColor: Colors.white,
-            side: const BorderSide(color: Color(0xFFE0E0E0)),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+            label: Text(
+              'Continue with Google',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF1A1A1A),
+              ),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            style: OutlinedButton.styleFrom(
+              backgroundColor: Colors.white,
+              side: const BorderSide(color: Color(0xFFE0E0E0)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+              elevation: 0,
+            ),
           ),
         ),
         const SizedBox(height: 12),
         // Apple Sign In
-        OutlinedButton.icon(
-          onPressed: () {
-            // TODO: Implement Apple Sign In
-          },
-          icon: const Icon(Icons.apple, color: Color(0xFF1A1A1A)),
-          label: Text(
-            'Continue with Apple',
-            style: GoogleFonts.inter(
-              fontWeight: FontWeight.w500,
-              color: const Color(0xFF1A1A1A),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: () {
+              // TODO: Implement Apple Sign In
+            },
+            icon: const Icon(Icons.apple, color: Color(0xFF1A1A1A)),
+            label: Text(
+              'Continue with Apple',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF1A1A1A),
+              ),
             ),
-          ),
-          style: OutlinedButton.styleFrom(
-            backgroundColor: Colors.white,
-            side: const BorderSide(color: Color(0xFFE0E0E0)),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+            style: OutlinedButton.styleFrom(
+              backgroundColor: Colors.white,
+              side: const BorderSide(color: Color(0xFFE0E0E0)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
+              elevation: 0,
             ),
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           ),
         ),
       ],
