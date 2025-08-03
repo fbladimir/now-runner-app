@@ -20,6 +20,7 @@ class AuthService extends ChangeNotifier {
         _isLoading = false;
         print('AuthService - notifying listeners, isLoading: $_isLoading');
         notifyListeners();
+        // Don't automatically navigate - let the UI handle navigation
       });
     } catch (e) {
       print('AuthService - Firebase not available: $e');
@@ -44,10 +45,20 @@ class AuthService extends ChangeNotifier {
         password: password,
       );
       
+      // Add a small delay to handle timing issues
+      await Future.delayed(const Duration(milliseconds: 500));
+      
       await credential.user?.updateDisplayName(displayName);
       return credential;
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
+    } catch (e) {
+      // If it's a PigeonUserDetails error but we have a user, consider it successful
+      if (e.toString().contains('PigeonUserDetails') && _auth.currentUser != null) {
+        print('PigeonUserDetails error but user created successfully');
+        return null; // Return null to indicate success but no credential
+      }
+      throw Exception('Sign up failed: ${e.toString()}');
     }
   }
 
@@ -60,12 +71,24 @@ class AuthService extends ChangeNotifier {
     }
     
     try {
-      return await _auth.signInWithEmailAndPassword(
+      final credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      
+      // Add a small delay to handle timing issues
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      return credential;
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
+    } catch (e) {
+      // If it's a PigeonUserDetails error but we have a user, consider it successful
+      if (e.toString().contains('PigeonUserDetails') && _auth.currentUser != null) {
+        print('PigeonUserDetails error but user signed in successfully');
+        return null; // Return null to indicate success but no credential
+      }
+      throw Exception('Sign in failed: ${e.toString()}');
     }
   }
 

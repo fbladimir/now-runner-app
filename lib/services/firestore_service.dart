@@ -18,8 +18,105 @@ class FirestoreService {
     return null;
   }
 
+  Future<String?> getUserRole(String userId) async {
+    try {
+      final doc = await _firestore.collection('users').doc(userId).get();
+      if (doc.exists) {
+        return doc.data()?['role'];
+      }
+      return null;
+    } catch (e) {
+      print('Error getting user role: $e');
+      return null;
+    }
+  }
+
   Future<void> updateUser(UserModel user) async {
     await _firestore.collection('users').doc(user.id).update(user.toMap());
+  }
+
+  Future<void> updateUserRole(String userId, String role) async {
+    try {
+      // First, check if the user document exists
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      
+      if (!userDoc.exists) {
+        // Create the user document if it doesn't exist
+        await _firestore.collection('users').doc(userId).set({
+          'id': userId,
+          'role': role,
+          'createdAt': DateTime.now().toIso8601String(),
+          'updatedAt': DateTime.now().toIso8601String(),
+          'isAvailable': false,
+          'rating': 0.0,
+          'completedJobs': 0,
+          'lastActive': DateTime.now().toIso8601String(),
+        });
+      } else {
+        // Update existing user document
+        await _firestore.collection('users').doc(userId).update({
+          'role': role,
+          'updatedAt': DateTime.now().toIso8601String(),
+        });
+      }
+    } catch (e) {
+      print('Error updating user role: $e');
+      throw Exception('Failed to save user role: $e');
+    }
+  }
+
+  Future<void> switchUserRole(String userId, String newRole) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'role': newRole,
+        'updatedAt': DateTime.now().toIso8601String(),
+      });
+    } catch (e) {
+      print('Error switching user role: $e');
+      throw Exception('Failed to switch user role: $e');
+    }
+  }
+
+  Future<void> updateRequesterInfo({
+    required String userId,
+    required String name,
+    required String zipCode,
+    required String contactMethod,
+  }) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'name': name,
+        'zipCode': zipCode,
+        'contactMethod': contactMethod,
+        'onboardingCompleted': true,
+        'updatedAt': DateTime.now().toIso8601String(),
+      });
+    } catch (e) {
+      print('Error updating requester info: $e');
+      throw Exception('Failed to save requester info: $e');
+    }
+  }
+
+  Future<void> updateRunnerInfo({
+    required String userId,
+    required String name,
+    required String zipCode,
+    required List<String> availability,
+    String? bio,
+  }) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'name': name,
+        'zipCode': zipCode,
+        'availability': availability,
+        'bio': bio ?? '',
+        'onboardingCompleted': true,
+        'updatedAt': DateTime.now().toIso8601String(),
+      });
+    } catch (e) {
+      print('Error updating runner info: $e');
+      throw Exception('Failed to save runner info: $e');
+    }
   }
 
   Future<void> updateUserAvailability(String userId, bool isAvailable) async {
